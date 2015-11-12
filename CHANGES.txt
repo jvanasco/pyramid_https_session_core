@@ -1,0 +1,4 @@
+0.0.1
+	initial work
+	originally this was part of `pyramid_subscribers_beaker_https_session`
+	this was split out for reuse by non-beaker backends
