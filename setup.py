@@ -18,7 +18,7 @@ requires = [
 
 setup(
     name="pyramid_https_session_core",
-    version="0.0.1",
+    version="0.0.2",
     description="provides for a 'session_https' secure session interface",
     long_description=README,
     classifiers=[
