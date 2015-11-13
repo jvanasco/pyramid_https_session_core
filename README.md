@@ -42,6 +42,15 @@ Your users should just invoke your `initialize_https_session_support` as part of
 		https_session_factory = Foo()
 		register_https_session_factory(config, settings, https_session_factory)
 
+Supports
+========
+
+This package provides infrastructure to:
+
+* https://github.com/jvanasco/pyramid_subscribers_beaker_https_session
+* https://github.com/jvanasco/pyramid_https_session_redis
+
+
 
 License
 =======
