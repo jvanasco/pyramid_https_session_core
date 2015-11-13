@@ -36,6 +36,10 @@ Developers
 
 Build out a function `initialize_https_session_support` that registers a factory with this package.
 
+A reference implementation is available in pyramid_https_session_redis (see link below)
+
+Several utility methods are provided to standardize how different libraries can map similar configuration options
+
 Your users should just invoke your `initialize_https_session_support` as part of their startup
 
 	def initialize_https_session_support(config, settings):
