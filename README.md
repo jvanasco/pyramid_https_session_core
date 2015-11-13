@@ -51,6 +51,13 @@ This package provides infrastructure to:
 * https://github.com/jvanasco/pyramid_https_session_redis
 
 
+PyPi
+==========
+
+This package is available on PyPi
+
+* https://pypi.python.org/pypi/pyramid_https_session_core
+
 
 License
 =======
