@@ -72,7 +72,11 @@ def register_https_session_factory(config, settings, https_session_factory):
 
 class SessionBackendConfigurator(object):
     """
-    A class that exposes some interfaces,
+    A class that exposes some interfaces used to standardize implementations.
+    
+    A reference implementation is available in pyramid_https_session_redis
+    
+    * `https://github.com/jvanasco/pyramid_https_session_redis`
     """
 
     compatibility_options = {'secure': 'secure',
@@ -83,7 +87,14 @@ class SessionBackendConfigurator(object):
     "pyramid_https_sessions_core" expects for an option, and the Values are
     the names that the backend has elected.
     
-    At a minimum this must define `secure` and `httponly`
+    At a minimum, this must define `secure` and `httponly`
+    """
+
+    allowed_passthrough_options = ()
+    """
+    ``allowed_passthrough_options`` is a tuple of options that are allowed to
+    passthrough to the backend constructor.  they will not be removed by any
+    calls to `cleanup_options`.
     """
     
     @classmethod
@@ -145,6 +156,8 @@ class SessionBackendConfigurator(object):
                      'type',
                      'ensure_scheme',
                      ):
+            if _opt in cls.allowed_passthrough_options:
+                continue
             if _opt in factory_options:
                 del factory_options[_opt]
 
