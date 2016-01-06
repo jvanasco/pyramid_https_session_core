@@ -1,3 +1,7 @@
+0.0.3
+	more docs
+	new `allowed_passthrough_options`
+
 0.0.2
 	slight updates
 	standardizing a bit for easier compat with other libraries
