@@ -1,3 +1,6 @@
+0.0.4 (unreleased)
+	cleaning up
+
 0.0.3
 	more docs
 	new `allowed_passthrough_options`

@@ -14,7 +14,7 @@ class ISessionHttpsFactory(ISessionFactory):
 
 class NotHttpsRequest(Exception):
     """
-    Raised when we're not an HTTPS request, and the application is configured 
+    Raised when we're not an HTTPS request, and the application is configured
     to ensure_scheme.
     """
     pass
@@ -26,8 +26,8 @@ class NotHttpsRequest(Exception):
 def request_property__session_https(request):
     """
     Private Method.
-    This should be a reified request method. 
-    Note that we don't automatically raise a `NotHttpsRequest`.  
+    This should be a reified request method.
+    Note that we don't automatically raise a `NotHttpsRequest`.
     This behavior is intentional.
     """
     # are we ensuring https?
@@ -50,7 +50,7 @@ def register_https_session_factory(config, settings, https_session_factory):
     Plugin Developer Method.
     Developers should call this when creating an ISessionHttpsFactory
     """
-    
+
     def register_session_https_factory():
         config.registry.registerUtility(https_session_factory, ISessionHttpsFactory)
 
@@ -73,9 +73,9 @@ def register_https_session_factory(config, settings, https_session_factory):
 class SessionBackendConfigurator(object):
     """
     A class that exposes some interfaces used to standardize implementations.
-    
+
     A reference implementation is available in pyramid_https_session_redis
-    
+
     * `https://github.com/jvanasco/pyramid_https_session_redis`
     """
 
@@ -86,7 +86,7 @@ class SessionBackendConfigurator(object):
     ``compatibility_options`` is a dict where the Keys are the names that
     "pyramid_https_sessions_core" expects for an option, and the Values are
     the names that the backend has elected.
-    
+
     At a minimum, this must define `secure` and `httponly`
     """
 
@@ -96,18 +96,18 @@ class SessionBackendConfigurator(object):
     passthrough to the backend constructor.  they will not be removed by any
     calls to `cleanup_options`.
     """
-    
+
     @classmethod
     def ensure_compatibility(cls, factory_options):
         """
         Plugin Developer Method.
-    
-        This manipulates a dictionary `factory_options` in-place, ensuring any 
+
+        This manipulates a dictionary `factory_options` in-place, ensuring any
         commonly used attributes from one backend that are missing can be found
         in another backend.  This aids in adapting between 2 session backends.
 
-        ``compatibility_options`` - a list of tuples where the first element is the 
-        attribute name that the backend package uses to describe a given feature, 
+        ``compatibility_options`` - a list of tuples where the first element is the
+        attribute name that the backend package uses to describe a given feature,
         and the second element is the name used by legacy packages.
 
             compatibility_options = {'key': 'cookie_name',
@@ -117,10 +117,9 @@ class SessionBackendConfigurator(object):
                                      'set_on_exception': 'cookie_on_exception',
                                      }
 
-    
         ``factory_options`` - the dict of options to-be-passed to the factory
         """
-        for standardized_k, backend_k in cls.compatibility_options.items():
+        for (standardized_k, backend_k) in cls.compatibility_options.items():
             if (backend_k not in factory_options) and (standardized_k in factory_options):
                 factory_options[backend_k] = factory_options.pop(standardized_k)
 
@@ -152,7 +151,7 @@ class SessionBackendConfigurator(object):
     def cleanup_options(cls, factory_options):
         """clears out `pyramid_https_session_core` options"""
         # and remove the `pyramid_https_session_core` kwargs:
-        for _opt in ('framework', 
+        for _opt in ('framework',
                      'type',
                      'ensure_scheme',
                      ):
