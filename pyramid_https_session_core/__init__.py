@@ -1,11 +1,12 @@
 # pyramid
 from pyramid.interfaces import ISessionFactory
-from pyramid.settings import asbool
+# from pyramid.settings import asbool
 
 # ==============================================================================
 
 
 __VERSION__ = '0.0.4'
+
 
 # ==============================================================================
 
@@ -168,5 +169,3 @@ class SessionBackendConfigurator(object):
     @classmethod
     def recast_options(cls, factory_options, prefix):
         return {"%s.%s" % (prefix, k): v for (k, v) in factory_options.items()}
-
-
