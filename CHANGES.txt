@@ -1,5 +1,6 @@
-0.0.4 (unreleased)
+0.0.4
 	cleaning up
+	migrated version into python file
 
 0.0.3
 	more docs

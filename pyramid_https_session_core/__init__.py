@@ -1,6 +1,12 @@
+# pyramid
 from pyramid.interfaces import ISessionFactory
 from pyramid.settings import asbool
 
+# ==============================================================================
+
+
+__VERSION__ = '0.0.4
+'
 
 # ==============================================================================
 

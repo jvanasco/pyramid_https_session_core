@@ -5,6 +5,16 @@ import os
 from setuptools import setup
 from setuptools import find_packages
 
+# store version in the init.py
+import re
+with open(
+        os.path.join(
+            os.path.dirname(__file__),
+            'pyramid_https_session_core', '__init__.py')) as v_file:
+    VERSION = re.compile(
+        r".*__VERSION__ = '(.*?)'",
+        re.S).match(v_file.read()).group(1)
+
 try:
     here = os.path.abspath(os.path.dirname(__file__))
     README = open(os.path.join(here, "README.md")).read()
@@ -18,7 +28,7 @@ requires = [
 
 setup(
     name="pyramid_https_session_core",
-    version="0.0.4",
+    version=VERSION,
     description="provides for a 'session_https' secure session interface",
     long_description=README,
     classifiers=[
