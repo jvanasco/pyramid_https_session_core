@@ -7,7 +7,11 @@ core https session extensions for pyramid
 This does not provide for the session factory, but contains a means to build and
 register the session factories.
 
-This is a support package for new https-only interfaces to be built upon
+This is a support package for new https-only interfaces to be built upon.
+
+A MUCH BETTER WAY would be to do this via request methods.
+
+This package will likely EOL or evolve into a variant that uses request methods.
 
 support for https awareness
 ===========================
