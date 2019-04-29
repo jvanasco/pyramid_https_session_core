@@ -1,3 +1,7 @@
+0.0.6
+	2019/04/29
+	Python3 classifier
+
 0.0.5
 	2017/10/17
 	0.0.4 was a packaging error that wasn't supposed to be uploaded.
