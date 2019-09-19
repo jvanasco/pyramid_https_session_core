@@ -1,11 +1,12 @@
 # pyramid
 from pyramid.interfaces import ISessionFactory
+
 # from pyramid.settings import asbool
 
 # ==============================================================================
 
 
-__VERSION__ = '0.0.6'
+__VERSION__ = "0.0.7dev"
 
 
 # ==============================================================================
@@ -15,6 +16,7 @@ class ISessionHttpsFactory(ISessionFactory):
     """
     subclass of ISessionFactory; needs to be unique class
     """
+
     pass
 
 
@@ -23,6 +25,7 @@ class NotHttpsRequest(Exception):
     Raised when we're not an HTTPS request, and the application is configured
     to ensure_scheme.
     """
+
     pass
 
 
@@ -37,14 +40,14 @@ def request_property__session_https(request):
     This behavior is intentional.
     """
     # are we ensuring https?
-    if request.registry.settings['pyramid_https_session_core.ensure_scheme']:
-        if request.scheme != 'https':
+    if request.registry.settings["pyramid_https_session_core.ensure_scheme"]:
+        if request.scheme != "https":
             return None
             # don't raise yet, because it has issues with checking for session_https
             raise NotHttpsRequest()
     factory = request.registry.queryUtility(ISessionHttpsFactory)
     if factory is None:
-        raise AttributeError('No `session_https` factory registered')
+        raise AttributeError("No `session_https` factory registered")
     return factory(request)
 
 
@@ -60,18 +63,20 @@ def register_https_session_factory(config, settings, https_session_factory):
     def register_session_https_factory():
         config.registry.registerUtility(https_session_factory, ISessionHttpsFactory)
 
-    intr = config.introspectable('session https factory',
-                                 None,
-                                 config.object_description(https_session_factory),
-                                 'session https factory'
-                                 )
-    intr['factory'] = https_session_factory
-    config.action(ISessionHttpsFactory, register_session_https_factory,
-                  introspectables=(intr, ),
-                  )
-    config.set_request_property(request_property__session_https,
-                                'session_https', reify=True,
-                                )
+    intr = config.introspectable(
+        "session https factory",
+        None,
+        config.object_description(https_session_factory),
+        "session https factory",
+    )
+    intr["factory"] = https_session_factory
+    config.action(
+        ISessionHttpsFactory, register_session_https_factory, introspectables=(intr,)
+    )
+    config.set_request_property(
+        request_property__session_https, "session_https", reify=True
+    )
+
 
 # ------------------------------------------------------------------------------
 
@@ -85,9 +90,7 @@ class SessionBackendConfigurator(object):
     * `https://github.com/jvanasco/pyramid_https_session_redis`
     """
 
-    compatibility_options = {'secure': 'secure',
-                             'httponly': 'httponly',
-                             }
+    compatibility_options = {"secure": "secure", "httponly": "httponly"}
     """
     ``compatibility_options`` is a dict where the Keys are the names that
     "pyramid_https_sessions_core" expects for an option, and the Values are
@@ -126,15 +129,15 @@ class SessionBackendConfigurator(object):
         ``factory_options`` - the dict of options to-be-passed to the factory
         """
         for (standardized_k, backend_k) in cls.compatibility_options.items():
-            if (backend_k not in factory_options) and (standardized_k in factory_options):
+            if (backend_k not in factory_options) and (
+                standardized_k in factory_options
+            ):
                 factory_options[backend_k] = factory_options.pop(standardized_k)
 
     @classmethod
     def ensure_security(cls, config, factory_options):
         """This ensures we do everything on https"""
-        for _opt in ('secure',
-                     'httponly',
-                     ):
+        for _opt in ("secure", "httponly"):
             # grab the backend version of the option
             _opt_backend = cls.compatibility_options[_opt]
             if _opt_backend in factory_options and not factory_options[_opt_backend]:
@@ -143,12 +146,12 @@ class SessionBackendConfigurator(object):
         # note if we're going to ensure the https scheme... default to True
         ensure_scheme = True
         # extend this to our backend pyramid_https_session_core.ensure_scheme
-        config.registry.settings['pyramid_https_session_core.ensure_scheme'] = ensure_scheme
+        config.registry.settings[
+            "pyramid_https_session_core.ensure_scheme"
+        ] = ensure_scheme
 
         # force secure...
-        for _opt in ('secure',
-                     'httponly',
-                     ):
+        for _opt in ("secure", "httponly"):
             # grab the backend version of the option
             _opt_backend = cls.compatibility_options[_opt]
             factory_options[_opt_backend] = True
@@ -157,10 +160,7 @@ class SessionBackendConfigurator(object):
     def cleanup_options(cls, factory_options):
         """clears out `pyramid_https_session_core` options"""
         # and remove the `pyramid_https_session_core` kwargs:
-        for _opt in ('framework',
-                     'type',
-                     'ensure_scheme',
-                     ):
+        for _opt in ("framework", "type", "ensure_scheme"):
             if _opt in cls.allowed_passthrough_options:
                 continue
             if _opt in factory_options:
