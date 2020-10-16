@@ -1,11 +1,33 @@
-# pyramid_https_session_core
+pyramid_https_session_core
+==========================
 
-core https session extensions for pyramid
+**This package is EOL and support has been discontinued.**
 
-`pyramid_https_session_core` allows you to boostrap on a https only session factory
 
-This does not provide for the session factory, but contains a means to build and
-register the session factories.
+Core https session extensions for Pyramid.
+
+`pyramid.interfaces` offers a `ISessionFactory` which is used to bind a "session"
+onto `request.session`.
+
+This library creates a new `ISessionHttpsFactory` interface, which can be used
+to bind a "session" onto `request.session_https`.  This library can be used to
+provide a single https-only session, or can work alongside Pyramid's session as
+well.
+
+This package does not provide for the session factory, but contains the tools
+to build and register the session factories.  A session factory can be as simple
+as using Pyramid's own `SignedCookieSessionFactory`:
+
+
+		  from pyramid.session import SignedCookieSessionFactory
+		  my_session_factory = SignedCookieSessionFactory('itsaseekreet')
+
+		  from pyramid.config import Configurator
+		  config = Configurator()
+		- config.set_session_factory(my_session_factory)
+		+ pyramid_https_session_core.register_https_session_factory(
+        +    config, settings, my_session_factory
+        + )
 
 This is a support package for new https-only interfaces to be built upon.
 
@@ -14,12 +36,11 @@ A MUCH BETTER WAY would be to do this via request methods.
 This package will likely EOL or evolve into a variant that uses request methods.
 
 support for https awareness
-===========================
+---------------------------
 
 default values are `true`.  They can be set to `false`
 
 *	session_https.ensure_scheme = true
-*	beaker_session_https.ensure_scheme = true
 
 If `request.scheme` is not "https", then `session_https` will be `None`.
 
@@ -33,10 +54,11 @@ Then add this section
 
 	[filter:proxy-prefix]
 	use = egg:PasteDeploy#prefix
+	
 
 
 Developers
-==========
+----------
 
 Build out a function `initialize_https_session_support` that registers a factory with this package.
 
@@ -51,7 +73,7 @@ Your users should just invoke your `initialize_https_session_support` as part of
 		register_https_session_factory(config, settings, https_session_factory)
 
 Supports
-========
+--------
 
 This package provides infrastructure to:
 
@@ -60,7 +82,7 @@ This package provides infrastructure to:
 
 
 PyPi
-==========
+----
 
 This package is available on PyPi
 
@@ -68,6 +90,6 @@ This package is available on PyPi
 
 
 License
-=======
+-------
 
 MIT

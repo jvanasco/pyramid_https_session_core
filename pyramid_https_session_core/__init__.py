@@ -1,12 +1,12 @@
 # pyramid
 from pyramid.interfaces import ISessionFactory
+from pyramid.session import SignedCookieSessionFactory
 
-# from pyramid.settings import asbool
 
 # ==============================================================================
 
 
-__VERSION__ = "0.0.7dev"
+__VERSION__ = "0.0.7dev0"
 
 
 # ==============================================================================
@@ -40,7 +40,7 @@ def request_property__session_https(request):
     This behavior is intentional.
     """
     # are we ensuring https?
-    if request.registry.settings["pyramid_https_session_core.ensure_scheme"]:
+    if request.registry.settings.get("pyramid_https_session_core.ensure_scheme"):
         if request.scheme != "https":
             return None
             # don't raise yet, because it has issues with checking for session_https
@@ -73,9 +73,12 @@ def register_https_session_factory(config, settings, https_session_factory):
     config.action(
         ISessionHttpsFactory, register_session_https_factory, introspectables=(intr,)
     )
-    config.set_request_property(
+    config.add_request_method(
         request_property__session_https, "session_https", reify=True
     )
+
+    # if "pyramid_https_session_core.ensure_scheme" not in settings:
+    #    settings["pyramid_https_session_core.ensure_scheme"] = True
 
 
 # ------------------------------------------------------------------------------

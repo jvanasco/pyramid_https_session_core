@@ -11,7 +11,7 @@ import re
 with open(
     os.path.join(os.path.dirname(__file__), "pyramid_https_session_core", "__init__.py")
 ) as v_file:
-    VERSION = re.compile(r".*__VERSION__ = '(.*?)'", re.S).match(v_file.read()).group(1)
+    VERSION = re.compile(r'.*__VERSION__ = "(.*?)"', re.S).match(v_file.read()).group(1)
 
 try:
     here = os.path.abspath(os.path.dirname(__file__))
@@ -20,7 +20,16 @@ try:
 except:
     README = ""
 
-requires = ["pyramid"]
+# Pyramid Requirements:
+# 1.4 add_request_method
+# 1.5 SignedCookieSessionFactory, for tests
+install_requires = [
+    "pyramid>=1.5",
+]
+tests_require = [
+    "pytest",
+]
+testing_extras = tests_require + []
 
 setup(
     name="pyramid_https_session_core",
@@ -43,7 +52,10 @@ setup(
     license="MIT",
     include_package_data=True,
     zip_safe=False,
-    tests_require=requires,
-    install_requires=requires,
+    install_requires=install_requires,
+    tests_require=tests_require,
+    extras_require={
+        "testing": testing_extras,
+    },
     test_suite="tests",
 )
