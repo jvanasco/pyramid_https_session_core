@@ -3,6 +3,7 @@ pyramid_https_session_core
 
 **This package is EOL and support has been discontinued.**
 
+Build Status: ![Python package](https://github.com/jvanasco/pyramid_https_session_core/workflows/Python%20package/badge.svg)
 
 Core https session extensions for Pyramid.
 
