@@ -13,13 +13,6 @@ with open(
 ) as v_file:
     VERSION = re.compile(r'.*__VERSION__ = "(.*?)"', re.S).match(v_file.read()).group(1)
 
-try:
-    here = os.path.abspath(os.path.dirname(__file__))
-    README = open(os.path.join(here, "README.md")).read()
-    README = README.split("\n\n", 1)[0] + "\n"
-except:
-    README = ""
-
 # Pyramid Requirements:
 # 1.4 add_request_method
 # 1.5 SignedCookieSessionFactory, for tests
@@ -35,7 +28,7 @@ setup(
     name="pyramid_https_session_core",
     version=VERSION,
     description="provides for a 'session_https' secure session interface",
-    long_description=README,
+    long_description="This package is EOL and support has been discontinued.",
     classifiers=[
         "Intended Audience :: Developers",
         "Framework :: Pyramid",
