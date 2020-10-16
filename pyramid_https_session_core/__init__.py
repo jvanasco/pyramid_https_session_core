@@ -1,6 +1,7 @@
 # pyramid
 from pyramid.interfaces import ISessionFactory
 from pyramid.session import SignedCookieSessionFactory
+from pyramid.settings import asbool
 
 
 # ==============================================================================
@@ -35,7 +36,7 @@ class NotHttpsRequest(Exception):
 def request_property__session_https(request):
     """
     Private Method.
-    This should be a reified request method.
+    This will become a @reified request method via `add_request_method()`
     Note that we don't automatically raise a `NotHttpsRequest`.
     This behavior is intentional.
     """
@@ -60,25 +61,22 @@ def register_https_session_factory(config, settings, https_session_factory):
     Developers should call this when creating an ISessionHttpsFactory
     """
 
-    def register_session_https_factory():
+    def _register_session_https_factory():
         config.registry.registerUtility(https_session_factory, ISessionHttpsFactory)
 
-    intr = config.introspectable(
+    _intr = config.introspectable(
         "session https factory",
         None,
         config.object_description(https_session_factory),
         "session https factory",
     )
-    intr["factory"] = https_session_factory
+    _intr["factory"] = https_session_factory
     config.action(
-        ISessionHttpsFactory, register_session_https_factory, introspectables=(intr,)
+        ISessionHttpsFactory, _register_session_https_factory, introspectables=(_intr,)
     )
     config.add_request_method(
         request_property__session_https, "session_https", reify=True
     )
-
-    # if "pyramid_https_session_core.ensure_scheme" not in settings:
-    #    settings["pyramid_https_session_core.ensure_scheme"] = True
 
 
 # ------------------------------------------------------------------------------
@@ -140,6 +138,7 @@ class SessionBackendConfigurator(object):
     @classmethod
     def ensure_security(cls, config, factory_options):
         """This ensures we do everything on https"""
+
         for _opt in ("secure", "httponly"):
             # grab the backend version of the option
             _opt_backend = cls.compatibility_options[_opt]
@@ -147,7 +146,9 @@ class SessionBackendConfigurator(object):
                 raise ValueError("`%s` MUST be `True`" % _opt_backend)
 
         # note if we're going to ensure the https scheme... default to True
-        ensure_scheme = True
+        ensure_scheme = factory_options.get("ensure_scheme", True)
+        if ensure_scheme != asbool(ensure_scheme):
+            ensure_scheme = asbool(ensure_scheme)
         # extend this to our backend pyramid_https_session_core.ensure_scheme
         config.registry.settings[
             "pyramid_https_session_core.ensure_scheme"
